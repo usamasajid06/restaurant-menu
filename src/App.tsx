@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import CategoriesPage from './pages/CategoriesPage';
-import ItemsListPage from './pages/ItemsListPage';
-import CartSummary from './components/CartSummary';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import CategoriesPage from "./pages/CategoriesPage";
+import ItemsListPage from "./pages/ItemsListPage";
+import CartSummary from "./components/CartSummary";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Routes>
@@ -13,6 +13,6 @@ function App() {
       <CartSummary />
     </Router>
   );
-}
+};
 
 export default App;

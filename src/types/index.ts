@@ -1,4 +1,3 @@
-// Category type based on API response
 export interface Category {
   id: number;
   name: string;
@@ -9,7 +8,6 @@ export interface Category {
   count_sub_categories: number;
 }
 
-// ExtraOption type for options within extrasWithOptions
 export interface ExtraOption {
   id: number;
   type: string;
@@ -18,10 +16,9 @@ export interface ExtraOption {
   option_has_price: boolean;
   currency: string;
   price: number;
-  extrasWithOptions: any[]; // Can refine if nested extras are used
+  extrasWithOptions: any[];
 }
 
-// Extra type for extrasWithOptions in MenuItem
 export interface Extra {
   is_active: number;
   name: string;
@@ -32,13 +29,23 @@ export interface Extra {
   option: ExtraOption[];
 }
 
-// Simplified type for selected extras in CartItem
-export interface SelectedExtra {
-  extra_id: number;
-  option_id?: number; // Optional, as not all extras have an option_id
+export interface OptionalExtra {
+  id: number;
+  name: string;
+  price: number;
 }
 
-// MenuItem type based on API response
+export interface RequiredExtra {
+  id: number;
+  name: string;
+  options: string[];
+}
+
+export interface SelectedExtra {
+  extra_id: number;
+  option_id?: number;
+}
+
 export interface MenuItem {
   id: number;
   name: string;
@@ -53,15 +60,17 @@ export interface MenuItem {
   additional_items: any[];
   dietarySymbols: any[];
   extrasWithOptions: Extra[];
+  optionalExtras?: OptionalExtra[];
+  requiredExtras?: RequiredExtra[];
 }
 
-// CartItem extends MenuItem with cart-specific fields
 export interface CartItem extends MenuItem {
   quantity: number;
-  selectedExtras: SelectedExtra[]; // Use simpler type for cart
+  selectedExtras: SelectedExtra[];
+  selectedOptionalExtras: OptionalExtra[];
+  selectedRequiredExtras: { [key: string]: string };
 }
 
-// Cart state for Redux
 export interface CartState {
   items: CartItem[];
   totalPrice: number;
