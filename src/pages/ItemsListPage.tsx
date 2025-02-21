@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { fetchItemsByCategory } from "../api/api";
 import { MenuItem } from "../types";
 import {
@@ -11,16 +11,9 @@ import {
   Button,
   Box,
   CircularProgress,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Badge,
 } from "@mui/material";
-import { ArrowBack, ShoppingCart } from "@mui/icons-material";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store"; // Ensure this path is correct for your Redux store
 import ItemDetailPopup from "../components/ItemDetailPopup";
-import Header from "../components/Header"; // Import the Header component
+import Header from "../components/Header";
 
 function ItemsListPage() {
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -28,12 +21,6 @@ function ItemsListPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-  const navigate = useNavigate();
-
-  // Get cart items count from Redux
-  const cartItemsCount = useSelector(
-    (state: RootState) => state.cart.items.length
-  );
 
   useEffect(() => {
     const loadItems = async () => {
@@ -78,15 +65,13 @@ function ItemsListPage() {
 
   return (
     <>
-      {/* Use the Header component */}
       <Header />
 
-      {/* Main Content */}
       <Grid
         container
         spacing={2}
         padding={2}
-        mb={8}
+        mb={12}
         sx={{ flexGrow: 1, cursor: "pointer" }}
       >
         {items.map((item) => (

@@ -26,10 +26,6 @@ const Header: React.FC<HeaderProps> = ({
     }
   };
 
-  //   const handleCartClick = () => {
-  //     navigate("/cart");
-  //   };
-
   return (
     <AppBar position="static" sx={{ bgcolor: "#e0e0e0", boxShadow: "none" }}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -48,12 +44,7 @@ const Header: React.FC<HeaderProps> = ({
         >
           {title}
         </Typography>
-        <IconButton
-          edge="end"
-          color="primary"
-          aria-label="cart"
-          //   onClick={handleCartClick}
-        >
+        <IconButton edge="end" color="primary" aria-label="cart">
           <Badge badgeContent={cartItemsCount} color="error">
             <ShoppingCart />
           </Badge>

@@ -6,16 +6,15 @@ import {
   Grid,
   Card,
   CardMedia,
-  CardContent,
   Typography,
   Box,
   CircularProgress,
   Chip,
   TextField,
 } from "@mui/material";
-import Header from "../components/Header"; // Import the Header component
+import Header from "../components/Header";
 
-function CategoriesPage() {
+const CategoriesPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -44,39 +43,36 @@ function CategoriesPage() {
   }, []);
 
   useEffect(() => {
-    const filtered = categories.filter(
-      (category) =>
-        category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        category.display_name.toLowerCase().includes(searchQuery.toLowerCase())
+    setFilteredCategories(
+      categories.filter(
+        (category) =>
+          category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          category.display_name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      )
     );
-    setFilteredCategories(filtered);
   }, [searchQuery, categories]);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearchQuery(event.target.value);
-  };
 
-  if (loading)
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  if (error) return <Typography color="error">{error}</Typography>;
-
-  return (
+  return loading ? (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  ) : error ? (
+    <Typography color="error">{error}</Typography>
+  ) : (
     <>
-      {/* Header */}
       <Header />
-
-      {/* Scrollable Content */}
       <Box
         sx={{ height: "calc(100vh - 64px)", paddingBottom: { xs: 64, md: 80 } }}
       >
@@ -93,7 +89,7 @@ function CategoriesPage() {
           <Grid
             container
             spacing={2}
-            mb={8}
+            mb={12}
             sx={{ flexGrow: 1, cursor: "pointer" }}
           >
             {filteredCategories.length > 0 ? (
@@ -112,14 +108,21 @@ function CategoriesPage() {
                     sx={{
                       width: "100%",
                       height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      minHeight: { xs: 180, md: 220 },
                       position: "relative",
                       overflow: "hidden",
+                      borderRadius: 4,
+                      "&:after": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(0, 0, 0, 0.5)",
+                        zIndex: 1,
+                      },
                     }}
                   >
-                    {/* Opening Time Tag in Top Left Corner */}
                     {category.opens_at && category.opens_at !== null && (
                       <Chip
                         label={`Opens at ${category.opens_at}`}
@@ -130,37 +133,53 @@ function CategoriesPage() {
                           backgroundColor: "#ff0000",
                           color: "#ffffff",
                           fontWeight: "bold",
-                          zIndex: 2,
-                          fontSize: { xs: "0.75rem", md: "0.875rem" },
+                          zIndex: 3,
+                          fontSize: { xs: "0.5rem", md: "0.875rem" },
                         }}
                       />
                     )}
                     <CardMedia
                       component="img"
-                      height={140}
                       image={category.image}
                       alt={category.name}
                       sx={{
                         width: "100%",
+                        height: "100%",
                         objectFit: "cover",
                         objectPosition: "center",
                       }}
                     />
-                    <CardContent
+                    <Box
                       sx={{
-                        flexGrow: 1,
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        zIndex: 2,
                         display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "space-between",
+                        justifyContent: "center",
+                        alignItems: "end",
+                        color: "#ffffff",
+                        textAlign: "center",
                       }}
                     >
                       <Typography
                         variant="h6"
-                        sx={{ fontSize: { xs: "1rem", md: "1.25rem" } }}
+                        sx={{
+                          fontSize: {
+                            xs: "0.6rem",
+                            sm: "1rem",
+                            md: "1.3rem",
+                          },
+                          fontWeight: "bold",
+                          textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
+                          marginBottom: "5px",
+                        }}
                       >
-                        {category.name}
+                        {category.display_name}
                       </Typography>
-                    </CardContent>
+                    </Box>
                   </Card>
                 </Grid>
               ))
@@ -176,6 +195,6 @@ function CategoriesPage() {
       </Box>
     </>
   );
-}
+};
 
 export default CategoriesPage;

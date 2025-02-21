@@ -34,12 +34,16 @@ function CartSummary() {
         }}
       >
         <Typography
-          variant="h6"
+          variant="h1"
           sx={{
-            color: "#ffffff",
+            color: "#1976d2",
             fontWeight: "bold",
             fontSize: "1rem",
+            backgroundColor: "#ffffff",
             ml: 4,
+            px: 1,
+            py: 0.6,
+            borderRadius: "5px",
           }}
         >
           {itemCount}
@@ -54,7 +58,7 @@ function CartSummary() {
             "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" },
           }}
         >
-          View cart {itemCount}
+          View cart
         </Button>
         <Typography
           variant="h6"
