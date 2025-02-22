@@ -21,7 +21,7 @@ function CartSummary() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        overflow: "visible",
+        background: "#00618d",
       }}
     >
       <Box
@@ -36,7 +36,7 @@ function CartSummary() {
         <Typography
           variant="h1"
           sx={{
-            color: "#1976d2",
+            color: "#00618d",
             fontWeight: "bold",
             fontSize: "1rem",
             backgroundColor: "#ffffff",

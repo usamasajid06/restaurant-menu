@@ -78,13 +78,40 @@ const CategoriesPage = () => {
       >
         <Box padding={2}>
           <TextField
-            label="Search Categories"
+            label="Search for Categories"
             variant="outlined"
             fullWidth
             value={searchQuery}
             onChange={handleSearchChange}
-            sx={{ marginBottom: 2 }}
             placeholder="e.g., Breakfast"
+            sx={{
+              marginBottom: 2,
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+                borderColor: "#00618d",
+                ".MuiOutlinedInput-notchedOutline": {
+                  border: "2px solid #00618d",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#00618d",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#00618d",
+                },
+              },
+              "& .MuiInputLabel-outlined": {
+                color: "#00618d",
+              },
+              "& .MuiInputLabel-outlined.Mui-focused": {
+                color: "#00618d",
+              },
+              "& .MuiInputLabel-outlined.Mui-shrink": {
+                color: "#00618d",
+              },
+              "& .MuiInputBase-input": {
+                color: "#000000",
+              },
+            }}
           />
           <Grid
             container
@@ -118,7 +145,7 @@ const CategoriesPage = () => {
                         left: 0,
                         width: "100%",
                         height: "100%",
-                        background: "rgba(0, 0, 0, 0.5)",
+                        background: "rgba(0, 0, 0, 0.3)",
                         zIndex: 1,
                       },
                     }}
@@ -128,13 +155,14 @@ const CategoriesPage = () => {
                         label={`Opens at ${category.opens_at}`}
                         sx={{
                           position: "absolute",
-                          top: 8,
-                          left: 8,
+                          top: 6,
+                          left: 6,
                           backgroundColor: "#ff0000",
                           color: "#ffffff",
-                          fontWeight: "bold",
+                          fontWeight: "500",
                           zIndex: 3,
-                          fontSize: { xs: "0.5rem", md: "0.875rem" },
+                          fontSize: { xs: "0.5rem", md: "0.7rem" },
+                          padding: "0px",
                         }}
                       />
                     )}
@@ -168,11 +196,13 @@ const CategoriesPage = () => {
                         variant="h6"
                         sx={{
                           fontSize: {
-                            xs: "0.6rem",
+                            xs: "0.7rem",
                             sm: "1rem",
                             md: "1.3rem",
                           },
                           fontWeight: "bold",
+                          textTransform: "uppercase",
+                          letterSpacing: "1px",
                           textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
                           marginBottom: "5px",
                         }}

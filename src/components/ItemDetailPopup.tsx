@@ -18,7 +18,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { addToCart } from "../redux/cartSlice";
-import { MenuItem, SelectedExtra, CartItem, OptionalExtra } from "../types"; // Removed RequiredExtra (as per previous fix)
+import { MenuItem, SelectedExtra, CartItem, OptionalExtra } from "../types";
 import { addItemToOrder } from "../api/api";
 
 interface Props {
@@ -105,7 +105,16 @@ function ItemDetailPopup({ item, onClose }: Props) {
 
         {item.optionalExtras && (
           <>
-            <Typography variant="h6">Add Side</Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                backgroundColor: "#f5f5f5",
+                padding: "3px 15px",
+                marginBottom: "7px",
+              }}
+            >
+              Add Side
+            </Typography>
             <Box
               sx={{ display: "flex", flexWrap: "wrap", gap: 1, width: "100%" }}
             >
@@ -138,7 +147,16 @@ function ItemDetailPopup({ item, onClose }: Props) {
               ))}
             </Box>
 
-            <Typography variant="h6">Add Sauce</Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                backgroundColor: "#f5f5f5",
+                padding: "3px 15px",
+                marginY: "7px",
+              }}
+            >
+              Add Sauce
+            </Typography>
             <Box
               sx={{ display: "flex", flexWrap: "wrap", gap: 1, width: "100%" }}
             >
@@ -171,7 +189,16 @@ function ItemDetailPopup({ item, onClose }: Props) {
               ))}
             </Box>
 
-            <Typography variant="h6">Add a Glass</Typography>
+            <Typography
+              variant="h6"
+              sx={{
+                backgroundColor: "#f5f5f5",
+                padding: "3px 15px",
+                marginY: "7px",
+              }}
+            >
+              Add a Glass
+            </Typography>
             <Box
               sx={{ display: "flex", flexWrap: "wrap", gap: 1, width: "100%" }}
             >
@@ -206,13 +233,12 @@ function ItemDetailPopup({ item, onClose }: Props) {
           </>
         )}
 
-        {/* Required Extras */}
         {item.requiredExtras &&
           item.requiredExtras.map((extra) => (
             <Box key={extra.id} sx={{ width: "100%" }}>
               <FormControl
                 component="fieldset"
-                sx={{ marginTop: 2, width: "100%" }}
+                sx={{ marginY: 2, width: "100%" }}
               >
                 <Box
                   sx={{
@@ -220,13 +246,37 @@ function ItemDetailPopup({ item, onClose }: Props) {
                     justifyContent: "space-between",
                     alignItems: "center",
                     width: "100%",
+                    backgroundColor: "#f5f5f5",
+                    paddingY: "10px",
                   }}
                 >
-                  <FormLabel component="legend" required>
-                    {extra.name}
-                  </FormLabel>
-                  <Typography sx={{ color: "error.main" }}>Required</Typography>
+                  <Box pl={2}>
+                    <FormLabel
+                      component="legend"
+                      required
+                      sx={{
+                        color: "black",
+                        "&.Mui-focused": {
+                          color: "black",
+                        },
+                        "&.MuiFormLabel-filled": {
+                          color: "black",
+                        },
+                        "&.Mui-error": {
+                          color: "black",
+                        },
+                      }}
+                    >
+                      {extra.name}
+                    </FormLabel>
+                  </Box>
+                  <Box pr={2}>
+                    <Typography sx={{ color: "error.main" }}>
+                      Required
+                    </Typography>
+                  </Box>
                 </Box>
+
                 <RadioGroup
                   value={selectedRequiredExtras[extra.name] || ""}
                   onChange={(e) =>
@@ -251,7 +301,6 @@ function ItemDetailPopup({ item, onClose }: Props) {
             </Box>
           ))}
 
-        {/* Existing extrasWithOptions (API extras) */}
         {item.extrasWithOptions && item.extrasWithOptions.length > 0 && (
           <Box>
             <Typography variant="h6">Customize</Typography>
