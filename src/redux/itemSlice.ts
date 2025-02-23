@@ -6,7 +6,7 @@ interface ItemState {
   error: string | null;
   loading: boolean;
   selectedItem: MenuItem | null;
-  lastFetchedByCategory: { [key: number]: number }; // Map categoryId to timestamp
+  lastFetchedByCategory: { [key: number]: number };
 }
 
 const initialState: ItemState = {

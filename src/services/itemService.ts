@@ -12,7 +12,6 @@ export const fetchItemsByCategory = async (
     const response = await api.get(
       `/2da6c53a-522d-485d-b77c-2fafd601ff0c?cat=${categoryId}`
     );
-    console.log("Items response:", response.data);
     const items = response.data?.data.items.data.map((item: any) => ({
       ...item,
       optionalExtras: [
@@ -76,7 +75,6 @@ export const fetchItemsByCategory = async (
     }));
     return items;
   } catch (error) {
-    console.error("Error fetching items:", error);
     throw error;
   }
 };

@@ -3,7 +3,6 @@ import { CartItem } from "../types";
 
 export const addItemToOrder = async (item: CartItem): Promise<void> => {
   try {
-    console.log("Adding item to order:", item);
     const formData = new FormData();
     formData.append("restaurant_id", "1");
     formData.append("item_id", item.id.toString());
@@ -41,7 +40,6 @@ export const addItemToOrder = async (item: CartItem): Promise<void> => {
 
     await api.post("/order/order-item", formData);
   } catch (error) {
-    console.error("Error adding item to order:", error);
     throw error;
   }
 };
