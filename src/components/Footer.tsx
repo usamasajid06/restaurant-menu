@@ -28,10 +28,10 @@ const Footer = () => {
           color: "#FFFFFF",
         }}
       >
-        <MenuIcon sx={{ fontSize: "2rem" }} />
-        <HomeIcon sx={{ fontSize: "2rem" }} />
-        <SearchIcon sx={{ fontSize: "2rem" }} />
-        <WhatsAppIcon sx={{ fontSize: "2rem" }} />
+        <MenuIcon sx={{ fontSize: "2rem", cursor: "pointer" }} />
+        <HomeIcon sx={{ fontSize: "2rem", cursor: "pointer" }} />
+        <SearchIcon sx={{ fontSize: "2rem", cursor: "pointer" }} />
+        <WhatsAppIcon sx={{ fontSize: "2rem", cursor: "pointer" }} />
       </Box>
     </Box>
   );
