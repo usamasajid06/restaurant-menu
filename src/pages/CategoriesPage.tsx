@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../redux/store";
 import { fetchCategories } from "../services/categoryService";
 import { Category } from "../types";
 import {
@@ -13,38 +14,43 @@ import {
   TextField,
 } from "@mui/material";
 import Header from "../components/Header";
+import {
+  fetchCategoriesStart,
+  fetchCategoriesSuccess,
+  fetchCategoriesFailure,
+} from "../redux/categorySlice";
+import { RootState } from "../redux/store";
 
 const CategoriesPage = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const categories = useAppSelector(
+    (state: RootState) => state.category.categories
+  );
+  const error = useAppSelector((state: RootState) => state.category.error);
+  const loading = useAppSelector((state: RootState) => state.category.loading);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     const loadCategories = async () => {
+      dispatch(fetchCategoriesStart());
       try {
         const data = await fetchCategories();
-        if (Array.isArray(data)) {
-          setCategories(data);
-          setFilteredCategories(data);
-        } else {
-          setError("API did not return an array of categories");
-        }
+        dispatch(fetchCategoriesSuccess(data));
       } catch (err: any) {
-        setError(err.message || "Failed to load categories");
-      } finally {
-        setLoading(false);
+        dispatch(
+          fetchCategoriesFailure(err.message || "Failed to load categories")
+        );
       }
     };
     loadCategories();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     setFilteredCategories(
       categories.filter(
-        (category) =>
+        (category: Category) =>
           category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           category.display_name
             .toLowerCase()
@@ -56,20 +62,22 @@ const CategoriesPage = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearchQuery(event.target.value);
 
-  return loading ? (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <CircularProgress />
-    </Box>
-  ) : error ? (
-    <Typography color="error">{error}</Typography>
-  ) : (
+  if (loading)
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  if (error) return <Typography color="error">{error}</Typography>;
+
+  return (
     <>
       <Header />
       <Box
@@ -119,7 +127,7 @@ const CategoriesPage = () => {
             sx={{ flexGrow: 1, cursor: "pointer" }}
           >
             {filteredCategories.length > 0 ? (
-              filteredCategories.map((category) => (
+              filteredCategories.map((category: Category) => (
                 <Grid
                   item
                   xs={6}
