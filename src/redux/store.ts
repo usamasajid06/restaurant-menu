@@ -1,19 +1,19 @@
-// src/redux/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./cartSlice";
 import categoryReducer from "./categorySlice";
+import itemReducer from "./itemSlice";
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
     category: categoryReducer,
+    item: itemReducer,
   },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// Simple custom hooks for Redux
 import { useDispatch, useSelector } from "react-redux";
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

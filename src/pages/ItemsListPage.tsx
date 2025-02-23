@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../redux/store";
 import { fetchItemsByCategory } from "../services/itemService";
 import { MenuItem } from "../types";
 import {
@@ -15,44 +16,55 @@ import {
 } from "@mui/material";
 import ItemDetailPopup from "../components/ItemDetailPopup";
 import Header from "../components/Header";
+import {
+  fetchItemsStart,
+  fetchItemsSuccess,
+  fetchItemsFailure,
+  setSelectedItem,
+  clearSelectedItem,
+} from "../redux/itemSlice";
+import { RootState } from "../redux/store";
 
 const ItemsListPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
-  const [items, setItems] = useState<MenuItem[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const items = useAppSelector((state: RootState) => state.item.items);
+  const error = useAppSelector((state: RootState) => state.item.error);
+  const loading = useAppSelector((state: RootState) => state.item.loading);
+  const selectedItem = useAppSelector(
+    (state: RootState) => state.item.selectedItem
+  );
+  const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
+    if (!categoryId) {
+      dispatch(fetchItemsFailure("No category ID provided"));
+      return;
+    }
     const loadItems = async () => {
-      if (!categoryId) {
-        setError("No category ID provided");
-        setLoading(false);
-        return;
-      }
+      dispatch(fetchItemsStart());
       try {
         const data = await fetchItemsByCategory(Number(categoryId));
-        console.log("Fetched Items:", data);
         if (!Array.isArray(data)) {
-          setError("API did not return an array of items");
+          dispatch(fetchItemsFailure("API did not return an array of items"));
         } else {
-          setItems(data);
+          dispatch(fetchItemsSuccess(data));
         }
       } catch (err: any) {
-        setError(err.message || "Failed to load items");
-      } finally {
-        setLoading(false);
+        dispatch(fetchItemsFailure(err.message || "Failed to load items"));
       }
     };
     loadItems();
-  }, [categoryId]);
+  }, [categoryId, dispatch]);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setSearchQuery(event.target.value);
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) =>
+      setSearchQuery(event.target.value),
+    []
+  );
 
   const filteredItems = items.filter(
-    (item) =>
+    (item: MenuItem) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.description &&
         item.description.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -168,7 +180,7 @@ const ItemsListPage = () => {
             }}
           />
           <Grid container spacing={2} padding={1} mb={12} sx={{ flexGrow: 1 }}>
-            {filteredItems.map((item) => (
+            {filteredItems.map((item: MenuItem) => (
               <Grid item xs={12} md={6} key={item.id} sx={{ flex: "1 1 auto" }}>
                 <Card
                   sx={{
@@ -192,7 +204,7 @@ const ItemsListPage = () => {
                         objectPosition: "center",
                         cursor: "pointer",
                       }}
-                      onClick={() => setSelectedItem(item)}
+                      onClick={() => dispatch(setSelectedItem(item))}
                     />
                   )}
                   <CardContent
@@ -261,7 +273,7 @@ const ItemsListPage = () => {
                         variant="contained"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedItem(item);
+                          dispatch(setSelectedItem(item));
                         }}
                         sx={{
                           fontSize: { xs: "0.6rem", md: "0.8rem" },
@@ -289,7 +301,7 @@ const ItemsListPage = () => {
       {selectedItem && (
         <ItemDetailPopup
           item={selectedItem}
-          onClose={() => setSelectedItem(null)}
+          onClose={() => dispatch(clearSelectedItem())}
         />
       )}
     </>
