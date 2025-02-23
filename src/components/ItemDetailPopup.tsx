@@ -19,7 +19,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { addToCart } from "../redux/cartSlice";
 import { MenuItem, SelectedExtra, CartItem, OptionalExtra } from "../types";
-import { addItemToOrder } from "../api/api";
+import { addItemToOrder } from "../services/orderService";
 
 interface Props {
   item: MenuItem;
@@ -91,16 +91,30 @@ function ItemDetailPopup({ item, onClose }: Props) {
           <img src={item.image} alt={item.name} style={{ width: "100%" }} />
         )}
         <Typography>{item.description}</Typography>
-        <Typography>AED {item.price}</Typography>
 
-        <Box display="flex" alignItems="center" my={2}>
-          <IconButton onClick={() => setQuantity(Math.max(1, quantity - 1))}>
-            <RemoveIcon />
-          </IconButton>
-          <Typography>{quantity}</Typography>
-          <IconButton onClick={() => setQuantity(quantity + 1)}>
-            <AddIcon />
-          </IconButton>
+        <Box
+          display="flex"
+          alignItems="center"
+          my={2}
+          width="100%"
+          justifyContent="space-between"
+        >
+          <Box>
+            <Typography>AED {totalPrice.toFixed(2)}</Typography>
+          </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <IconButton onClick={() => setQuantity(Math.max(1, quantity - 1))}>
+              <RemoveIcon />
+            </IconButton>
+            <Typography>{quantity}</Typography>
+            <IconButton onClick={() => setQuantity(quantity + 1)}>
+              <AddIcon />
+            </IconButton>
+          </Box>
         </Box>
 
         {item.optionalExtras && (
@@ -138,9 +152,16 @@ function ItemDetailPopup({ item, onClose }: Props) {
                       />
                     }
                     label={extra.name}
-                    sx={{ marginRight: 0 }}
+                    sx={{
+                      marginRight: 0,
+                    }}
                   />
-                  <Typography sx={{ marginLeft: 2, color: "text.secondary" }}>
+                  <Typography
+                    sx={{
+                      marginLeft: 2,
+                      color: "text.secondary",
+                    }}
+                  >
                     + AED {extra.price}
                   </Typography>
                 </Box>

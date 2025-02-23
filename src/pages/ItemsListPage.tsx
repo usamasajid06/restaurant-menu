@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchItemsByCategory } from "../api/api";
+import { fetchItemsByCategory } from "../services/itemService";
 import { MenuItem } from "../types";
 import {
   Grid,
@@ -22,7 +22,7 @@ const ItemsListPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>(""); // Add search state
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const loadItems = async () => {
@@ -116,7 +116,7 @@ const ItemsListPage = () => {
             container
             spacing={2}
             padding={2}
-            mb={12}
+            mb={15}
             sx={{ flexGrow: 1, cursor: "pointer" }}
           >
             <Grid item xs={12}>
@@ -172,7 +172,7 @@ const ItemsListPage = () => {
               <Grid item xs={12} md={6} key={item.id} sx={{ flex: "1 1 auto" }}>
                 <Card
                   sx={{
-                    width: "100%",
+                    Width: "100%",
                     height: "100%",
                     display: "flex",
                     flexDirection: "row",
@@ -187,7 +187,7 @@ const ItemsListPage = () => {
                       image={item.image}
                       alt={item.name}
                       sx={{
-                        width: { xs: 150, md: 200 },
+                        width: { xs: 130, md: 180 },
                         objectFit: "cover",
                         objectPosition: "center",
                         cursor: "pointer",
@@ -204,6 +204,9 @@ const ItemsListPage = () => {
                       p: 2,
                       pl: 4,
                       bgcolor: "#ffffff",
+                      "@media (max-width: 380px)": {
+                        pl: 2,
+                      },
                     }}
                   >
                     <Typography
@@ -211,7 +214,7 @@ const ItemsListPage = () => {
                       sx={{
                         fontSize: { xs: "1rem", md: "1.25rem" },
                         fontWeight: "bold",
-                        mb: 1,
+                        mb: 0.3,
                       }}
                     >
                       {item.name}
@@ -238,6 +241,9 @@ const ItemsListPage = () => {
                         alignItems: "center",
                         "@media (max-width: 380px)": {
                           flexDirection: "column",
+                          justifyContent: "start",
+                          alignItems: "start",
+                          gap: "5px",
                         },
                       }}
                     >
@@ -263,6 +269,10 @@ const ItemsListPage = () => {
                           bgcolor: "#00618d",
                           "&:hover": {
                             bgcolor: "#004d7f",
+                          },
+                          "@media (max-width: 380px)": {
+                            fontSize: "0.5rem",
+                            padding: "4px 0px",
                           },
                         }}
                       >

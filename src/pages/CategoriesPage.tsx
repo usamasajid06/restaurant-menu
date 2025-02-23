@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchCategories } from "../api/api";
+import { fetchCategories } from "../services/categoryService";
 import { Category } from "../types";
 import {
   Grid,
@@ -26,7 +26,6 @@ const CategoriesPage = () => {
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
-        console.log("Fetched Categories:", data);
         if (Array.isArray(data)) {
           setCategories(data);
           setFilteredCategories(data);
@@ -116,7 +115,7 @@ const CategoriesPage = () => {
           <Grid
             container
             spacing={2}
-            mb={12}
+            mb={8}
             sx={{ flexGrow: 1, cursor: "pointer" }}
           >
             {filteredCategories.length > 0 ? (

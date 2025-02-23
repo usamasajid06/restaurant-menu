@@ -5,3 +5,26 @@ body {
   background: #efefef;
   box-sizing: border-box;
 }
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #00618d;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #004f73;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #00618d #f1f1f1;
+}
