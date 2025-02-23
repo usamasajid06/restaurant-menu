@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../redux/store";
 import { fetchCategories } from "../services/categoryService";
@@ -27,40 +27,49 @@ const CategoriesPage = () => {
   );
   const error = useAppSelector((state: RootState) => state.category.error);
   const loading = useAppSelector((state: RootState) => state.category.loading);
+  const lastFetched = useAppSelector(
+    (state: RootState) => state.category.lastFetched
+  );
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]);
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      dispatch(fetchCategoriesStart());
-      try {
-        const data = await fetchCategories();
-        dispatch(fetchCategoriesSuccess(data));
-      } catch (err: any) {
-        dispatch(
-          fetchCategoriesFailure(err.message || "Failed to load categories")
-        );
-      }
-    };
-    loadCategories();
-  }, [dispatch]);
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(event.target.value);
+    },
+    []
+  );
 
-  useEffect(() => {
-    setFilteredCategories(
+  const memoizedFilteredCategories = useMemo(
+    () =>
       categories.filter(
         (category: Category) =>
           category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           category.display_name
             .toLowerCase()
             .includes(searchQuery.toLowerCase())
-      )
-    );
-  }, [searchQuery, categories]);
+      ),
+    [searchQuery, categories]
+  );
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setSearchQuery(event.target.value);
+  useEffect(() => {
+    const CACHE_DURATION = 5 * 60 * 1000;
+    if (categories.length === 0 || Date.now() - lastFetched > CACHE_DURATION) {
+      const loadCategories = async () => {
+        dispatch(fetchCategoriesStart());
+        try {
+          const data = await fetchCategories();
+          dispatch(fetchCategoriesSuccess(data));
+        } catch (err: any) {
+          dispatch(
+            fetchCategoriesFailure(err.message || "Failed to load categories")
+          );
+        }
+      };
+      loadCategories();
+    }
+  }, [dispatch, categories.length, lastFetched]);
 
   if (loading)
     return (
@@ -126,8 +135,8 @@ const CategoriesPage = () => {
             mb={8}
             sx={{ flexGrow: 1, cursor: "pointer" }}
           >
-            {filteredCategories.length > 0 ? (
-              filteredCategories.map((category: Category) => (
+            {memoizedFilteredCategories.length > 0 ? (
+              memoizedFilteredCategories.map((category: Category) => (
                 <Grid
                   item
                   xs={6}

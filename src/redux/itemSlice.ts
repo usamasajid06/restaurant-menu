@@ -6,13 +6,15 @@ interface ItemState {
   error: string | null;
   loading: boolean;
   selectedItem: MenuItem | null;
+  lastFetchedByCategory: { [key: number]: number }; // Map categoryId to timestamp
 }
 
 const initialState: ItemState = {
   items: [],
   error: null,
-  loading: true,
+  loading: false,
   selectedItem: null,
+  lastFetchedByCategory: {},
 };
 
 const itemSlice = createSlice({
@@ -27,6 +29,11 @@ const itemSlice = createSlice({
       state.items = action.payload;
       state.loading = false;
       state.error = null;
+
+      state.lastFetchedByCategory = {
+        ...state.lastFetchedByCategory,
+        [0]: Date.now(),
+      };
     },
     fetchItemsFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
@@ -38,6 +45,12 @@ const itemSlice = createSlice({
     clearSelectedItem: (state) => {
       state.selectedItem = null;
     },
+    updateLastFetched: (state, action: PayloadAction<number>) => {
+      state.lastFetchedByCategory = {
+        ...state.lastFetchedByCategory,
+        [action.payload]: Date.now(),
+      };
+    },
   },
 });
 
@@ -47,5 +60,6 @@ export const {
   fetchItemsFailure,
   setSelectedItem,
   clearSelectedItem,
+  updateLastFetched,
 } = itemSlice.actions;
 export default itemSlice.reducer;

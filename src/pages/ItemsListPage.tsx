@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../redux/store";
 import { fetchItemsByCategory } from "../services/itemService";
@@ -33,42 +33,59 @@ const ItemsListPage = () => {
   const selectedItem = useAppSelector(
     (state: RootState) => state.item.selectedItem
   );
+  const lastFetched = useAppSelector(
+    (state: RootState) =>
+      state.item.lastFetchedByCategory[Number(categoryId) || 0]
+  );
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(event.target.value);
+    },
+    []
+  );
+
+  const filteredItems = useMemo(
+    () =>
+      items.filter(
+        (item: MenuItem) =>
+          item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (item.description &&
+            item.description.toLowerCase().includes(searchQuery.toLowerCase()))
+      ),
+    [searchQuery, items]
+  );
 
   useEffect(() => {
     if (!categoryId) {
       dispatch(fetchItemsFailure("No category ID provided"));
       return;
     }
-    const loadItems = async () => {
-      dispatch(fetchItemsStart());
-      try {
-        const data = await fetchItemsByCategory(Number(categoryId));
-        if (!Array.isArray(data)) {
-          dispatch(fetchItemsFailure("API did not return an array of items"));
-        } else {
-          dispatch(fetchItemsSuccess(data));
+    const categoryIdNum = Number(categoryId);
+    const CACHE_DURATION = 5 * 60 * 1000;
+    if (
+      items.length === 0 ||
+      !lastFetched ||
+      Date.now() - lastFetched > CACHE_DURATION
+    ) {
+      const loadItems = async () => {
+        dispatch(fetchItemsStart());
+        try {
+          const data = await fetchItemsByCategory(categoryIdNum);
+          if (!Array.isArray(data)) {
+            dispatch(fetchItemsFailure("API did not return an array of items"));
+          } else {
+            dispatch(fetchItemsSuccess(data));
+          }
+        } catch (err: any) {
+          dispatch(fetchItemsFailure(err.message || "Failed to load items"));
         }
-      } catch (err: any) {
-        dispatch(fetchItemsFailure(err.message || "Failed to load items"));
-      }
-    };
-    loadItems();
-  }, [categoryId, dispatch]);
-
-  const handleSearchChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) =>
-      setSearchQuery(event.target.value),
-    []
-  );
-
-  const filteredItems = items.filter(
-    (item: MenuItem) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.description &&
-        item.description.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+      };
+      loadItems();
+    }
+  }, [categoryId, dispatch, items.length, lastFetched]);
 
   return loading ? (
     <Box
