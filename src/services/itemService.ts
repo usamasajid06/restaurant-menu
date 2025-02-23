@@ -13,7 +13,7 @@ export const fetchItemsByCategory = async (
       `/2da6c53a-522d-485d-b77c-2fafd601ff0c?cat=${categoryId}`
     );
     console.log("Items response:", response.data);
-    const items = response.data.data.items.data.map((item: any) => ({
+    const items = response.data?.data.items.data.map((item: any) => ({
       ...item,
       optionalExtras: [
         { id: 1, name: "Truffle and parmesan fries", price: 30 },

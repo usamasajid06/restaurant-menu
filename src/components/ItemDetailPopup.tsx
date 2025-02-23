@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import Swal from "sweetalert2";
 import {
   Dialog,
   DialogTitle,
@@ -59,9 +60,14 @@ function ItemDetailPopup({ item, onClose }: Props) {
       await addItemToOrder(cartItem);
       dispatch(addToCart(cartItem));
       onClose();
-    } catch (err) {
-      console.error("Failed to add item to order:", err);
-    }
+      Swal.fire({
+        icon: "success",
+        title: "Success!",
+        text: "Item added to cart successfully.",
+        confirmButtonText: "OK",
+        timer: 2000,
+      });
+    } catch (err) {}
   };
 
   const handleOptionalExtraToggle = (extra: OptionalExtra) => {
@@ -152,16 +158,9 @@ function ItemDetailPopup({ item, onClose }: Props) {
                       />
                     }
                     label={extra.name}
-                    sx={{
-                      marginRight: 0,
-                    }}
+                    sx={{ marginRight: 0 }}
                   />
-                  <Typography
-                    sx={{
-                      marginLeft: 2,
-                      color: "text.secondary",
-                    }}
-                  >
+                  <Typography sx={{ marginLeft: 2, color: "text.secondary" }}>
                     + AED {extra.price}
                   </Typography>
                 </Box>
@@ -277,15 +276,9 @@ function ItemDetailPopup({ item, onClose }: Props) {
                       required
                       sx={{
                         color: "black",
-                        "&.Mui-focused": {
-                          color: "black",
-                        },
-                        "&.MuiFormLabel-filled": {
-                          color: "black",
-                        },
-                        "&.Mui-error": {
-                          color: "black",
-                        },
+                        "&.Mui-focused": { color: "black" },
+                        "&.MuiFormLabel-filled": { color: "black" },
+                        "&.Mui-error": { color: "black" },
                       }}
                     >
                       {extra.name}
@@ -354,8 +347,8 @@ function ItemDetailPopup({ item, onClose }: Props) {
           fullWidth
           sx={{
             marginTop: 2,
-            backgroundColor: "#1976d2",
-            "&:hover": { backgroundColor: "#1565c0" },
+            backgroundColor: "#00618d",
+            "&:hover": { backgroundColor: "#004d7f" },
           }}
         >
           Add to Cart (AED {totalPrice.toFixed(2)})
