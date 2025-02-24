@@ -1,25 +1,21 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../redux/store";
 import { fetchCategories } from "../services/categoryService";
 import { Category } from "../types";
 import {
   Grid,
-  Card,
-  CardMedia,
   Typography,
   Box,
   CircularProgress,
-  Chip,
   TextField,
 } from "@mui/material";
-import Header from "../components/Header";
 import {
   fetchCategoriesStart,
   fetchCategoriesSuccess,
   fetchCategoriesFailure,
 } from "../redux/categorySlice";
 import { RootState } from "../redux/store";
+import { CategoriesCard } from "../components/CategoriesCard";
 
 const CategoriesPage = () => {
   const categories = useAppSelector(
@@ -31,7 +27,6 @@ const CategoriesPage = () => {
     (state: RootState) => state.category.lastFetched
   );
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleSearchChange = useCallback(
@@ -88,7 +83,6 @@ const CategoriesPage = () => {
 
   return (
     <>
-      <Header />
       <Box
         sx={{ height: "calc(100vh - 64px)", paddingBottom: { xs: 64, md: 80 } }}
       >
@@ -137,97 +131,7 @@ const CategoriesPage = () => {
           >
             {memoizedFilteredCategories.length > 0 ? (
               memoizedFilteredCategories.map((category: Category) => (
-                <Grid
-                  item
-                  xs={6}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  key={category.id}
-                  sx={{ flex: "1 1 auto" }}
-                >
-                  <Card
-                    onClick={() => navigate(`/items/${category.id}`)}
-                    sx={{
-                      width: "100%",
-                      height: "100%",
-                      position: "relative",
-                      overflow: "hidden",
-                      borderRadius: 4,
-                      "&:after": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        background: "rgba(0, 0, 0, 0.3)",
-                        zIndex: 1,
-                      },
-                    }}
-                  >
-                    {category.opens_at && category.opens_at !== null && (
-                      <Chip
-                        label={`Opens at ${category.opens_at}`}
-                        sx={{
-                          position: "absolute",
-                          top: 6,
-                          left: 6,
-                          backgroundColor: "#ff0000",
-                          color: "#ffffff",
-                          fontWeight: "500",
-                          zIndex: 3,
-                          fontSize: { xs: "0.5rem", md: "0.7rem" },
-                          padding: "0px",
-                        }}
-                      />
-                    )}
-                    <CardMedia
-                      component="img"
-                      image={category.image}
-                      alt={category.name}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        objectPosition: "center",
-                      }}
-                    />
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        zIndex: 2,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "end",
-                        color: "#ffffff",
-                        textAlign: "center",
-                      }}
-                    >
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          fontSize: {
-                            xs: "0.7rem",
-                            sm: "1rem",
-                            md: "1.3rem",
-                          },
-                          fontWeight: "bold",
-                          textTransform: "uppercase",
-                          letterSpacing: "1px",
-                          textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
-                          marginBottom: "5px",
-                        }}
-                      >
-                        {category.display_name}
-                      </Typography>
-                    </Box>
-                  </Card>
-                </Grid>
+                <CategoriesCard category={category} />
               ))
             ) : (
               <Grid item xs={12}>

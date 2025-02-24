@@ -9,6 +9,7 @@ import CategoriesPage from "../pages/CategoriesPage";
 import ItemsListPage from "../pages/ItemsListPage";
 import Footer from "../components/Footer";
 import CartSummary from "../components/CartSummary";
+import Header from "../components/Header";
 
 const AppLayout = () => {
   const location = useLocation();
@@ -18,6 +19,7 @@ const AppLayout = () => {
 
   return (
     <>
+      <Header />
       <Outlet />
       {showCartSummary && <CartSummary />}
       {showFooter && <Footer />}

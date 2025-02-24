@@ -15,7 +15,6 @@ import {
   TextField,
 } from "@mui/material";
 import ItemDetailPopup from "../components/ItemDetailPopup";
-import Header from "../components/Header";
 import {
   fetchItemsStart,
   fetchItemsSuccess,
@@ -102,7 +101,6 @@ const ItemsListPage = () => {
     <Typography color="error">{error}</Typography>
   ) : filteredItems.length === 0 ? (
     <>
-      <Header />
       <Box
         sx={{ height: "calc(100vh - 64px)", paddingBottom: { xs: 64, md: 80 } }}
       >
@@ -157,7 +155,6 @@ const ItemsListPage = () => {
     </>
   ) : (
     <>
-      <Header />
       <Box
         sx={{ height: "calc(100vh - 64px)", paddingBottom: { xs: 64, md: 80 } }}
       >
