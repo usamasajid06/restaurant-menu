@@ -18,7 +18,7 @@ import {
   clearSelectedItem,
 } from "../redux/itemSlice";
 import { RootState } from "../redux/store";
-import { ItemsCard } from "../components/ItemsCard"; // Import the new component
+import { ItemsCard } from "../components/ItemsCard";
 
 const ItemsListPage = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
