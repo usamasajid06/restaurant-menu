@@ -19,7 +19,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { addToCart } from "../redux/cartSlice";
-import { MenuItem, SelectedExtra, CartItem, OptionalExtra } from "../types";
+import { MenuItem, CartItem, OptionalExtra } from "../types";
 import { addItemToOrder } from "../services/orderService";
 
 interface Props {
@@ -29,7 +29,6 @@ interface Props {
 
 function ItemDetailPopup({ item, onClose }: Props) {
   const [quantity, setQuantity] = useState(1);
-  const [selectedExtras, setSelectedExtras] = useState<SelectedExtra[]>([]);
   const [selectedOptionalExtras, setSelectedOptionalExtras] = useState<
     OptionalExtra[]
   >([]);
@@ -52,7 +51,7 @@ function ItemDetailPopup({ item, onClose }: Props) {
     const cartItem: CartItem = {
       ...item,
       quantity,
-      selectedExtras,
+      selectedExtras: [],
       selectedOptionalExtras,
       selectedRequiredExtras,
     };
@@ -123,143 +122,49 @@ function ItemDetailPopup({ item, onClose }: Props) {
           </Box>
         </Box>
 
-        {item.optionalExtras && (
-          <>
+        {item.optionalExtras && item.optionalExtras.length > 0 && (
+          <Box sx={{ marginY: 2 }}>
             <Typography
               variant="h6"
-              sx={{
-                backgroundColor: "#f5f5f5",
-                padding: "3px 15px",
-                marginBottom: "7px",
-              }}
+              sx={{ backgroundColor: "#f5f5f5", padding: "3px 15px" }}
             >
-              Add Side
+              Optional Extras
             </Typography>
-            <Box
-              sx={{ display: "flex", flexWrap: "wrap", gap: 1, width: "100%" }}
-            >
-              {item.optionalExtras.slice(0, 7).map((extra) => (
-                <Box
-                  key={extra.id}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={selectedOptionalExtras.some(
-                          (e) => e.id === extra.id
-                        )}
-                        onChange={() => handleOptionalExtraToggle(extra)}
-                      />
-                    }
-                    label={extra.name}
-                    sx={{ marginRight: 0 }}
-                  />
-                  <Typography sx={{ marginLeft: 2, color: "text.secondary" }}>
-                    + AED {extra.price}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-
-            <Typography
-              variant="h6"
-              sx={{
-                backgroundColor: "#f5f5f5",
-                padding: "3px 15px",
-                marginY: "7px",
-              }}
-            >
-              Add Sauce
-            </Typography>
-            <Box
-              sx={{ display: "flex", flexWrap: "wrap", gap: 1, width: "100%" }}
-            >
-              {item.optionalExtras.slice(7, 13).map((extra) => (
-                <Box
-                  key={extra.id}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={selectedOptionalExtras.some(
-                          (e) => e.id === extra.id
-                        )}
-                        onChange={() => handleOptionalExtraToggle(extra)}
-                      />
-                    }
-                    label={extra.name}
-                    sx={{ marginRight: 0 }}
-                  />
-                  <Typography sx={{ marginLeft: 2, color: "text.secondary" }}>
-                    + AED {extra.price}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-
-            <Typography
-              variant="h6"
-              sx={{
-                backgroundColor: "#f5f5f5",
-                padding: "3px 15px",
-                marginY: "7px",
-              }}
-            >
-              Add a Glass
-            </Typography>
-            <Box
-              sx={{ display: "flex", flexWrap: "wrap", gap: 1, width: "100%" }}
-            >
-              {item.optionalExtras.slice(13).map((extra) => (
-                <Box
-                  key={extra.id}
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={selectedOptionalExtras.some(
-                          (e) => e.id === extra.id
-                        )}
-                        onChange={() => handleOptionalExtraToggle(extra)}
-                      />
-                    }
-                    label={extra.name}
-                    sx={{ marginRight: 0 }}
-                  />
-                  <Typography sx={{ marginLeft: 2, color: "text.secondary" }}>
-                    + AED {extra.price}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-          </>
+            {item.optionalExtras.map((extra) => (
+              <Box
+                key={extra.id}
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectedOptionalExtras.some(
+                        (e) => e.id === extra.id
+                      )}
+                      onChange={() => handleOptionalExtraToggle(extra)}
+                    />
+                  }
+                  label={extra.name}
+                  sx={{ marginRight: 0 }}
+                />
+                <Typography sx={{ marginLeft: 2, color: "text.secondary" }}>
+                  {extra.price > 0 ? `+ AED ${extra.price}` : "Free"}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
         )}
 
         {item.requiredExtras &&
+          item.requiredExtras.length > 0 &&
           item.requiredExtras.map((extra) => (
-            <Box key={extra.id} sx={{ width: "100%" }}>
-              <FormControl
-                component="fieldset"
-                sx={{ marginY: 2, width: "100%" }}
-              >
+            <Box key={extra.id} sx={{ width: "100%", marginY: 2 }}>
+              <FormControl component="fieldset" sx={{ width: "100%" }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -271,26 +176,12 @@ function ItemDetailPopup({ item, onClose }: Props) {
                   }}
                 >
                   <Box pl={2}>
-                    <FormLabel
-                      component="legend"
-                      required
-                      sx={{
-                        color: "black",
-                        "&.Mui-focused": { color: "black" },
-                        "&.MuiFormLabel-filled": { color: "black" },
-                        "&.Mui-error": { color: "black" },
-                      }}
-                    >
-                      {extra.name}
+                    <FormLabel component="legend" sx={{ color: "black" }}>
+                      {extra.name}{" "}
+                      <span style={{ color: "red" }}>(Required)</span>
                     </FormLabel>
                   </Box>
-                  <Box pr={2}>
-                    <Typography sx={{ color: "error.main" }}>
-                      Required
-                    </Typography>
-                  </Box>
                 </Box>
-
                 <RadioGroup
                   value={selectedRequiredExtras[extra.name] || ""}
                   onChange={(e) =>
@@ -309,36 +200,11 @@ function ItemDetailPopup({ item, onClose }: Props) {
                   ))}
                 </RadioGroup>
                 {!selectedRequiredExtras[extra.name] && (
-                  <Typography color="error">Required</Typography>
+                  <Typography color="error">Please select an option</Typography>
                 )}
               </FormControl>
             </Box>
           ))}
-
-        {item.extrasWithOptions && item.extrasWithOptions.length > 0 && (
-          <Box>
-            <Typography variant="h6">Customize</Typography>
-            {item.extrasWithOptions.map((extra) => (
-              <Box key={extra.extra_id}>
-                <Typography>{extra.name}</Typography>
-                {extra.option.map((opt) => (
-                  <Button
-                    key={opt.id}
-                    onClick={() =>
-                      setSelectedExtras((prev) => [
-                        ...prev,
-                        { extra_id: extra.extra_id, option_id: opt.id },
-                      ])
-                    }
-                    sx={{ width: "100%", marginBottom: 1 }}
-                  >
-                    {opt.name} {opt.price > 0 ? `(AED ${opt.price})` : ""}
-                  </Button>
-                ))}
-              </Box>
-            ))}
-          </Box>
-        )}
 
         <Typography>Total: AED {totalPrice.toFixed(2)}</Typography>
         <Button

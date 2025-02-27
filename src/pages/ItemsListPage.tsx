@@ -82,6 +82,10 @@ const ItemsListPage = () => {
     }
   }, [categoryId, dispatch, items.length, lastFetched]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return loading ? (
     <Box
       sx={{
