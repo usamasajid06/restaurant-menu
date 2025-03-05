@@ -5,10 +5,6 @@ export const fetchItemsByCategory = async (
   categoryId: number
 ): Promise<MenuItem[]> => {
   try {
-    console.log(
-      "Fetching items from:",
-      `${api.defaults.baseURL}/2da6c53a-522d-485d-b77c-2fafd601ff0c?cat=${categoryId}`
-    );
     const response = await api.get(
       `/2da6c53a-522d-485d-b77c-2fafd601ff0c?cat=${categoryId}`
     );

@@ -131,7 +131,7 @@ const CategoriesPage = () => {
           >
             {memoizedFilteredCategories.length > 0 ? (
               memoizedFilteredCategories.map((category: Category) => (
-                <CategoriesCard category={category} />
+                <CategoriesCard key={category.id} category={category} />
               ))
             ) : (
               <Grid item xs={12}>

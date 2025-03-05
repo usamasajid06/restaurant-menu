@@ -3,10 +3,6 @@ import { Category } from "../types";
 
 export const fetchCategories = async (): Promise<Category[]> => {
   try {
-    console.log(
-      "Fetching categories from:",
-      `${api.defaults.baseURL}/categories/2da6c53a-522d-485d-b77c-2fafd601ff0c`
-    );
     const response = await api.get(
       "/categories/2da6c53a-522d-485d-b77c-2fafd601ff0c"
     );
