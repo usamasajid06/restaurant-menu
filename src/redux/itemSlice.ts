@@ -29,6 +29,11 @@ const itemSlice = createSlice({
       state.items = action.payload;
       state.loading = false;
       state.error = null;
+
+      state.lastFetchedByCategory = {
+        ...state.lastFetchedByCategory,
+        [0]: Date.now(),
+      };
     },
     fetchItemsFailure: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
