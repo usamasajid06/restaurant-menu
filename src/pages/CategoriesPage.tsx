@@ -136,7 +136,7 @@ const CategoriesPage = () => {
             ) : (
               <Grid item xs={12}>
                 <Typography>
-                  No categories found matching your search
+                  No found categories matching your search
                 </Typography>
               </Grid>
             )}
